@@ -1,0 +1,34 @@
+name: Run Tests - Node Test Runner
+
+on: [push]
+
+jobs:
+    test:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v5
+            - name: Use Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: "25.x"
+                  cache: "npm"
+            - name: Install dependencies
+              run: npm ci
+              with:
+                  cache: "npm-install"
+            - name: Build
+              run: npm run build
+            - name: Run Tests with Coverage and JUnit reporting
+              run: npm run test-coverage
+            - name: Publish Test Results (JUnit)
+              uses: EnricoMi/publish-unit-test-result-action@v2
+              if: (!cancelled())
+              with:
+                  files: coverage/junit.xml
+
+            # - name: Report Code Coverage
+            #   uses: zgosalvez/github-actions-report-lcov@v3
+            #   with:
+            #       coverage-files: lcov.info
+            #       minimum-coverage: 60
