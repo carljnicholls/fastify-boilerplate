@@ -1,4 +1,4 @@
-name: Run Tests - Node Test Runner
+name: Run Tests
 
 on: [
         push,
@@ -8,10 +8,6 @@ on: [
 jobs:
     test:
         runs-on: ubuntu-latest
-        permissions:
-            contents: read
-            checks: write
-            pull-requests: write
         steps:
             - name: Checkout code
               uses: actions/checkout@v5
@@ -22,12 +18,12 @@ jobs:
                   cache: "npm"
             - name: Install dependencies
               run: npm ci
-            - name: Build
-              run: npm run build
             - name: Run Tests with Coverage and JUnit reporting
               run: npm run test-coverage
-            - name: Publish Test Results (JUnit)
-              uses: EnricoMi/publish-unit-test-result-action@v2
-              if: (!cancelled())
+            # Save the JUnit XML so the second workflow can find it
+            - name: Upload Test Results
+              uses: actions/upload-artifact@v4
+              if: always()
               with:
-                  files: coverage/junit.xml
+                name: junit-results
+                path: coverage/junit.xml

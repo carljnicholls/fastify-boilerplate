@@ -1,0 +1,38 @@
+name: CI - Report Results
+on:
+    workflow_run:
+        workflows: ["Run Tests - Node Test Runner"] # Ensure this matches your test.yml 'name'
+        types:
+            - completed
+
+jobs:
+    report:
+        runs-on: ubuntu-latest
+        permissions:
+            checks: write
+            pull-requests: write
+            contents: read
+        if: github.event.workflow_run.conclusion != 'cancelled'
+        steps:
+            - name: Download Test Results
+              uses: actions/download-artifact@v4
+              with:
+                  name: junit-results
+                  run-id: ${{ github.event.workflow_run.id }}
+                  github-token: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Download Event File
+              uses: actions/download-artifact@v4
+              with:
+                  name: event-file 
+                  run-id: ${{ github.event.workflow_run.id }}
+                  github-token: ${{ secrets.GITHUB_TOKEN }}
+              continue-on-error: true
+
+            - name: Publish Test Results
+              uses: EnricoMi/publish-unit-test-result-action@v2
+              with:
+                  commit: ${{ github.event.workflow_run.head_sha }}
+                  event_file: event.json
+                  event_name: ${{ github.event.workflow_run.event }}
+                  files: "*.xml"
