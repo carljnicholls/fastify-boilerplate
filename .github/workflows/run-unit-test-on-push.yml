@@ -31,8 +31,3 @@ jobs:
               if: (!cancelled())
               with:
                   files: coverage/junit.xml
-            # - name: Report Code Coverage
-            #   uses: zgosalvez/github-actions-report-lcov@v3
-            #   with:
-            #       coverage-files: lcov.info
-            #       minimum-coverage: 60
