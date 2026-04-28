@@ -1,10 +1,17 @@
 name: Run Tests - Node Test Runner
 
-on: [push, pull_request]
+on: [
+    push, 
+    # pull_request
+]
 
 jobs:
     test:
         runs-on: ubuntu-latest
+        # permissions:
+        #     checks: write
+        #     pull-requests: write
+        #     contents: read 
         steps:
             - name: Checkout code
               uses: actions/checkout@v5
