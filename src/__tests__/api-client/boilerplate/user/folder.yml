@@ -1,0 +1,13 @@
+info:
+  name: user
+  type: folder
+  seq: 1
+
+request:
+  auth: inherit
+  scripts:
+    - type: tests
+      code: |-
+        // test("should do it all", function () {
+        //   expect(res.getStatus()).to.equal(200);
+        // });

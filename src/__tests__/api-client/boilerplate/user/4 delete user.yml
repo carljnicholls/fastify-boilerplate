@@ -1,0 +1,45 @@
+info:
+  name: 4 delete user
+  type: http
+  seq: 4
+
+http:
+  method: DELETE
+  url: http://localhost:8080/api/v1/user/019dd3e7-d881-75a6-8511-82bc4735cd5e
+  body:
+    type: json
+    data: |+
+      {
+        "username": "terry", 
+        "first_name": "terry", 
+        "last_name": "three-toes", 
+        
+        "email": "terry@twotoes.com",
+        "password": "password"
+      }
+
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: before-request
+      code: |-
+        const user = JSON.parse(bru.getVar("user"));
+        req.setUrl('http://localhost:8080/api/v1/user/' + user.user_id)
+    - type: after-response
+      code: // bru.deleteVar("user");
+    - type: tests
+      code: |-
+        test("should return the deleted user", function () {
+          const user = JSON.parse(bru.getVar("user"));
+          
+          expect(JSON.stringify(res.getBody())).to.equal(JSON.stringify(user));
+          
+                 
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

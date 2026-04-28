@@ -1,0 +1,86 @@
+info:
+  name: "1 create user "
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: http://localhost:8080/api/v1/user
+  body:
+    type: json
+    data: |+
+      {  
+        "username": "terry", 
+        "first_name": "terry", 
+        "last_name": "two-toes", 
+        "email": "terry@twotoes.com",
+        "password": "password"
+      }
+
+
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: before-request
+      code: |-
+        function getRandomIntInclusive(min, max) {
+          const minCeiled = Math.ceil(min);
+          const maxFloored = Math.floor(max);
+          return Math.floor(Math.random() * (maxFloored - minCeiled + 1) + minCeiled);  
+        }
+
+        const d = String.fromCharCode(
+          getRandomIntInclusive(65, 90),
+          getRandomIntInclusive(97, 122),
+          getRandomIntInclusive(65, 90),
+          getRandomIntInclusive(97, 122),
+          getRandomIntInclusive(65, 90),
+          getRandomIntInclusive(97, 122),
+          getRandomIntInclusive(65, 90),
+          getRandomIntInclusive(97, 122),
+          getRandomIntInclusive(65, 90),
+          getRandomIntInclusive(97, 122),
+        );
+
+
+        // This modifies the outgoing request
+        req.setBody({
+          username: d,  
+          email: d + "@twotoes.com",
+          password: d
+        });
+    - type: after-response
+      code: |-
+        const data = res.getBody();
+
+        bru.setVar("user", JSON.stringify(data))
+    - type: tests
+      code: |-
+        const user = {  
+          "username": "terry", 
+          "first_name": "terry", 
+          "last_name": "two-toes", 
+          "email": "terry@twotoes.com",
+          "password": "password"
+        } 
+
+        function getRandomIntInclusive(min, max) {
+          const minCeiled = Math.ceil(min);
+          const maxFloored = Math.floor(max);
+          return Math.floor(Math.random() * (maxFloored - minCeiled + 1) + minCeiled);  
+        }
+
+        test("should create unique user", function () {
+          console.log(req)
+          
+          expect(res.getStatus()).to.equal(200);
+        //   expect(res.getBody()).to.have.
+          // extend with more assertions 
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

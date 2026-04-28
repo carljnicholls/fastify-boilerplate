@@ -1,0 +1,295 @@
+openapi: 3.1.1
+info:
+  title: fastify-boilerplate
+  description: ""
+  version: 0.0.1
+components:
+  schemas: {}
+paths:
+  /api/v1/health/status:
+    get:
+      tags:
+        - health
+      description: Health check
+      responses:
+        "200":
+          description: Heartbeat response
+          content:
+            application/json:
+              schema:
+                type: string
+                description: Heartbeat response
+                example: ok
+  /api/v1/health/teapot:
+    get:
+      tags:
+        - health
+      description: Teapot
+      responses:
+        "418":
+          description: https://www.rfc-editor.org/rfc/rfc9110#section-15.5.19
+          content:
+            application/json:
+              schema:
+                type: string
+                description: https://www.rfc-editor.org/rfc/rfc9110#section-15.5.19
+                example: I'm a teapot
+  /api/v1/user/{id}:
+    get:
+      tags:
+        - user
+      description: Gets a user for a given id
+      parameters:
+        - schema:
+            format: uuid
+            type: string
+          in: path
+          name: id
+          required: true
+      responses:
+        "200":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - username
+                  - email
+                properties:
+                  user_id:
+                    format: uuid
+                    type: string
+                  username:
+                    minLength: 1
+                    maxLength: 255
+                    type: string
+                  email:
+                    format: email
+                    maxLength: 255
+                    type: string
+                  first_name:
+                    anyOf:
+                      - maxLength: 255
+                        type: string
+                      - type: "null"
+                  last_name:
+                    anyOf:
+                      - maxLength: 255
+                        type: string
+                      - type: "null"
+        "404":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - message
+                  - error
+                properties:
+                  message:
+                    type: string
+                  error:
+                    type: string
+                  code:
+                    type: string
+                  statusCode:
+                    type: string
+    put:
+      tags:
+        - user
+      description: Update the user with the ID specified in the URL
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - username
+                - email
+              properties:
+                user_id:
+                  format: uuid
+                  type: string
+                username:
+                  minLength: 1
+                  maxLength: 255
+                  type: string
+                email:
+                  format: email
+                  maxLength: 255
+                  type: string
+                first_name:
+                  anyOf:
+                    - maxLength: 255
+                      type: string
+                    - type: "null"
+                last_name:
+                  anyOf:
+                    - maxLength: 255
+                      type: string
+                    - type: "null"
+      parameters:
+        - schema:
+            format: uuid
+            type: string
+          in: path
+          name: id
+          required: true
+      responses:
+        "200":
+          description: Default Response
+          content:
+            application/json:
+              schema: {}
+        "404":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - message
+                  - error
+                properties:
+                  message:
+                    type: string
+                  error:
+                    type: string
+                  code:
+                    type: string
+                  statusCode:
+                    type: string
+    delete:
+      tags:
+        - user
+      description: Delete the user with the ID specified in the URL
+      parameters:
+        - schema:
+            format: uuid
+            type: string
+          in: path
+          name: id
+          required: true
+      responses:
+        "200":
+          description: Default Response
+          content:
+            application/json:
+              schema: {}
+        "404":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - message
+                  - error
+                properties:
+                  message:
+                    type: string
+                  error:
+                    type: string
+                  code:
+                    type: string
+                  statusCode:
+                    type: string
+  /api/v1/user:
+    post:
+      tags:
+        - user
+      description: Create a user if it doesn't exist. Email and Username must be unique.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              allOf:
+                - type: object
+                  required:
+                    - username
+                    - email
+                  properties:
+                    user_id:
+                      format: uuid
+                      type: string
+                    username:
+                      minLength: 1
+                      maxLength: 255
+                      type: string
+                    email:
+                      format: email
+                      maxLength: 255
+                      type: string
+                    first_name:
+                      anyOf:
+                        - maxLength: 255
+                          type: string
+                        - type: "null"
+                    last_name:
+                      anyOf:
+                        - maxLength: 255
+                          type: string
+                        - type: "null"
+                  title: user_id
+                - type: object
+                  required:
+                    - password
+                  properties:
+                    password:
+                      minLength: 8
+                      type: string
+      responses:
+        "200":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - username
+                  - email
+                properties:
+                  user_id:
+                    format: uuid
+                    type: string
+                  username:
+                    minLength: 1
+                    maxLength: 255
+                    type: string
+                  email:
+                    format: email
+                    maxLength: 255
+                    type: string
+                  first_name:
+                    anyOf:
+                      - maxLength: 255
+                        type: string
+                      - type: "null"
+                  last_name:
+                    anyOf:
+                      - maxLength: 255
+                        type: string
+                      - type: "null"
+        "500":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - message
+                  - error
+                properties:
+                  message:
+                    type: string
+                  error:
+                    type: string
+                  code:
+                    type: string
+                  statusCode:
+                    type: string
