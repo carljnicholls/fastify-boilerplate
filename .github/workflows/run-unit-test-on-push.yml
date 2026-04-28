@@ -1,17 +1,13 @@
 name: Run Tests - Node Test Runner
 
 on: [
-    push, 
-    # pull_request
-]
+        push,
+        pull_request
+    ]
 
 jobs:
     test:
         runs-on: ubuntu-latest
-        # permissions:
-        #     checks: write
-        #     pull-requests: write
-        #     contents: read 
         permissions:
             contents: read
             checks: write
