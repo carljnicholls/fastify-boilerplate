@@ -64,6 +64,29 @@ jobs:
                   github-token: ${{ secrets.GITHUB_TOKEN }}
               continue-on-error: false
 
+
+            - name: DEBUG - List Downloaded Files
+              run: |
+                echo "=== DEBUG: Listing all files in workspace ==="
+                find . -type f -name "*.xml" 2>/dev/null || true
+                echo ""
+                echo "=== DEBUG: Listing coverage-results directory ==="
+                if [ -d "coverage-results" ]; then
+                  ls -laR coverage-results/
+                else
+                  echo "coverage-results directory does not exist!"
+                fi
+                echo ""
+                echo "=== DEBUG: Searching for cobertura files ==="
+                find . -name "*cobertura*" 2>/dev/null || true
+                echo ""
+                echo "=== DEBUG: File sizes ==="
+                find . -name "*.xml" -exec ls -lh {} \; 2>/dev/null || true
+              continue-on-error: true
+
+
+
+
             - name: Publish Test Coverage
               uses: irongut/CodeCoverageSummary@v1.3.0
               with:
@@ -77,6 +100,27 @@ jobs:
                   output: both
                   thresholds: "60 80"
               continue-on-error: false
+
+
+
+            - name: DEBUG - Check Output Files
+              run: |
+                echo "=== DEBUG: Checking for generated output files ==="
+                ls -la *.md 2>/dev/null || echo "No .md files found"
+                if [ -f "code-coverage-results.md" ]; then
+                  echo "=== Content of code-coverage-results.md ==="
+                  cat code-coverage-results.md
+                else
+                  echo "code-coverage-results.md was not created"
+                fi
+                if [ -f "coverage-results.md" ]; then
+                  echo "=== Content of coverage-results.md ==="
+                  cat coverage-results.md
+                fi
+              continue-on-error: true
+
+
+
 
             - name: Add Coverage PR Comment
               uses: marocchino/sticky-pull-request-comment@v2
