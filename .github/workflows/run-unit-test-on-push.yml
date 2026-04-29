@@ -1,9 +1,14 @@
 name: Run Tests
 
-on: [
-        push,
-        pull_request
-    ]
+on:
+    push:
+        branches:
+            - main
+    pull_request:
+
+env:
+    NODE_VERSION: "25.x"
+
 
 jobs:
     test:
@@ -14,12 +19,23 @@ jobs:
             - name: Use Node.js
               uses: actions/setup-node@v4
               with:
-                  node-version: "25.x"
+                  node-version: ${{ env.NODE_VERSION }}
                   cache: "npm"
             - name: Install dependencies
               run: npm ci
             - name: Run Tests with Coverage and JUnit reporting
               run: npm run test-coverage
+            # Save the event file so the reporting workflow can identify the PR
+            - name: Save Event File
+              if: always()
+              run: |
+                  echo '${{ toJson(github.event) }}' > event.json
+            - name: Upload Event File
+              uses: actions/upload-artifact@v4
+              if: always()
+              with:
+                  name: event-file
+                  path: event.json
             # Save the JUnit XML so the second workflow can find it
             - name: Upload Test Results
               uses: actions/upload-artifact@v4
