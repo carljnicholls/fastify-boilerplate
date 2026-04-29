@@ -71,9 +71,8 @@ Run individually, by directory or the entire collection.
 
 
 ## TODO: 
-- [ ] Fix duplication of schema's used between roots.
-                    
+- [ ] Fix duplication of schema's used between roots.                
         User and Error schema's should be in components and referenced 
-- [] Use .env variables in the application 
+- [x] Use .env variables in the application 
     - [x] Set up 
-    - [ ] Use variables in server initialization 
+    - [x] Use variables in server initialization 
