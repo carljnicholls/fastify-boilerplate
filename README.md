@@ -40,7 +40,7 @@ npm run test
 ```
 With Coverage: 
 ```bash
-npm run test -- --coverage
+npm run test-coverage
 ```
 
 

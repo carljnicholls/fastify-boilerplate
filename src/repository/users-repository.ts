@@ -27,7 +27,6 @@ export class UserRepository implements IUsersRepository {
     }
 
     async create(user: UserWithPassword): Promise<User> {
-        console.log("lag", user);
         const res = await this.pg.query(
             `
             INSERT INTO users (username, email, password, first_name, last_name) 
