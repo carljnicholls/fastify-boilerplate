@@ -1,7 +1,7 @@
 name: CI - Report Results
 on:
     workflow_run:
-        workflows: ["Run Tests - Node Test Runner"] # Ensure this matches your test.yml 'name'
+        workflows: ["Run Tests"] # Ensure this matches your test.yml 'name'
         types:
             - completed
 
