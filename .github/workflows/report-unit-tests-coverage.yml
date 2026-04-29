@@ -1,0 +1,71 @@
+name: CI - Report Coverage
+on:
+    workflow_run:
+        workflows: [Run Tests]
+        types:
+            - completed
+
+jobs:
+    report:
+        runs-on: ubuntu-latest
+        # Required for the action to post comments and create check runs
+        permissions:
+            checks: write
+            pull-requests: write
+            contents: read
+            issues: write
+
+        # Do not run if the triggering workflow was cancelled
+        if: github.event.workflow_run.conclusion != 'cancelled'
+
+        steps:
+            - name: Download Event File
+              uses: actions/download-artifact@v4
+              with:
+                  name: event-file
+                  path: event-data # Download into a specific folder
+                  run-id: ${{ github.event.workflow_run.id }}
+                  github-token: ${{ secrets.GITHUB_TOKEN }}
+              continue-on-error: true
+
+            - name: Parse PR Number
+              id: pr_number
+              uses: actions/github-script@v7
+              with:
+                script: |
+                  const fs = require('fs');
+                  const event = JSON.parse(fs.readFileSync('event-data/event.json', 'utf8'));
+                  return event.pull_request ? event.pull_request.number : null;
+                  result-encoding: string
+
+            - name: Download Coverage Results
+              uses: actions/download-artifact@v4
+              with:
+                  name: coverage-results
+                  path: coverage
+                  run-id: ${{ github.event.workflow_run.id }}
+                  github-token: ${{ secrets.GITHUB_TOKEN }}
+              continue-on-error: false
+
+            - name: Publish Test Coverage
+              uses: irongut/CodeCoverageSummary@v1.3.0
+              with:
+                  filename: "**/coverage/cobertura-coverage.xml"
+                  badge: true
+                  fail_below_min: true
+                  format: markdown
+                  hide_branch_rate: false
+                  hide_complexity: false
+                  indicators: true
+                  output: both
+                  thresholds: "60 80"
+              continue-on-error: false
+
+            - name: Add Coverage PR Comment
+              uses: marocchino/sticky-pull-request-comment@v2
+            #   if: steps.pr_number.outputs.result != 'null'
+              with:
+                recreate: true
+                number: ${{ steps.pr_number.outputs.result }}
+                path: code-coverage-results.md
+              continue-on-error: false
