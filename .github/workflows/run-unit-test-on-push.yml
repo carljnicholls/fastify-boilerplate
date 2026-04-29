@@ -48,7 +48,7 @@ jobs:
               if: always()
               with:
                   name: coverage-results
-                  path: "**/coverage/cobertura-coverage.xml"
+                  path: coverage/cobertura-coverage.xml
                   retention-days: 1
                   if-no-files-found: error 
 
