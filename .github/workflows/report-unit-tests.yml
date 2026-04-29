@@ -2,6 +2,7 @@ name: CI - Report Results
 on:
     workflow_run:
         workflows: ["Run Tests"] # Ensure this matches your test.yml 'name'
+        branches: [main]
         types:
             - completed
 
