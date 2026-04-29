@@ -1,21 +1,13 @@
 name: Run Tests
-
 on:
-    push:
-        branches:
-            - main
     pull_request:
-
-env:
-    NODE_VERSION: "25.x"
+        branches: [main]
 
 jobs:
     test:
         runs-on: ubuntu-latest
         steps:
-            - name: Checkout code
-              uses: actions/checkout@v5
-
+            - uses: actions/checkout@v5
             - name: Use Node.js
               uses: actions/setup-node@v4
               with:
@@ -25,27 +17,26 @@ jobs:
             - name: Install dependencies
               run: npm ci
 
-            - name: Run Tests with Coverage and JUnit reporting
-              run: npm run test-coverage
+            - name: Run Tests
+              # Ensure your test runner outputs a JUnit XML file
+              run: npm test-coverage
+
+            - name: Upload Test Results
+              uses: actions/upload-artifact@v4
+              if: always() # Upload even if tests fail
+              with:
+                  name: junit-results
+                  path: "**/junit.xml" # Adjust path to your results
+                  retention-days: 1
 
             - name: Save Event File
               if: always()
-              env:
-                  EVENT_CONTEXT: ${{ toJson(github.event) }}
-              run: echo "$EVENT_CONTEXT" > event.json
-
+              run: cp "${{ github.event_path }}" event.json
+            
             - name: Upload Event File
               uses: actions/upload-artifact@v4
               if: always()
               with:
                   name: event-file
                   path: event.json
-                  retention-days: 1 
-
-            - name: Upload Test Results
-              uses: actions/upload-artifact@v4
-              if: always()
-              with:
-                  name: junit-results
-                  path: coverage/junit.xml
                   retention-days: 1
