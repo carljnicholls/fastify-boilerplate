@@ -19,7 +19,7 @@ jobs:
 
             - name: Run Tests
               # Ensure your test runner outputs a JUnit XML file
-              run: npm test-coverage
+              run: npm run test-coverage
 
             - name: Upload Test Results
               uses: actions/upload-artifact@v4
