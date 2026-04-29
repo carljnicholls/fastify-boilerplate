@@ -1,0 +1,46 @@
+name: CI - Report Results
+on:
+    workflow_run:
+        workflows: ["Run Tests"]
+        types:
+            - completed
+
+jobs:
+    report:
+        runs-on: ubuntu-latest
+        # Required for the action to post comments and create check runs
+        permissions:
+            checks: write
+            pull-requests: write
+            contents: read
+            issues: write
+
+        # Do not run if the triggering workflow was cancelled
+        if: github.event.workflow_run.conclusion != 'cancelled'
+
+        steps: 
+            - name: Download Test Results
+              uses: actions/download-artifact@v4
+              with:
+                  name: junit-results
+                  path: test-results # Download into a specific folder
+                  run-id: ${{ github.event.workflow_run.id }}
+                  github-token: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Download Event File
+              uses: actions/download-artifact@v4
+              with:
+                  name: event-file
+                  path: event-data # Download into a specific folder
+                  run-id: ${{ github.event.workflow_run.id }}
+                  github-token: ${{ secrets.GITHUB_TOKEN }}
+              continue-on-error: true
+
+            - name: Publish Test Results
+              uses: EnricoMi/publish-unit-test-result-action@v2
+              with:
+                  commit: ${{ github.event.workflow_run.head_sha }}
+                  # Path logic: artifact-folder/filename
+                  event_file: event-data/event.json
+                  event_name: ${{ github.event.workflow_run.event }}
+                  files: "test-results/**/*.xml"

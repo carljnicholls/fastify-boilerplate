@@ -5,12 +5,11 @@ import envSchema from "./schemas/env.json" with { type: "json" };
 import { corsSettings } from "./constants/cors.js";
 import RouteBuilder from "./routes/router-builder.js";
 import { UserRepository } from "./repository/users-repository.js";
-import fastifyRedis, { type FastifyRedis } from "@fastify/redis";
+import fastifyRedis from "@fastify/redis";
 import addFormats from "ajv-formats";
 import { fastifyPostgres } from "@fastify/postgres";
 import packageJson from "../package.json" with { type: "json" };
 import type { TypeBoxTypeProvider } from '@fastify/type-provider-typebox';
-import { UserSchema } from "./schemas/user.js";
 
 const server = fastify({
     logger: {
@@ -42,7 +41,7 @@ await server.register(import("@fastify/swagger-ui"), {
     },
     staticCSP: true,
     transformStaticCSP: (header) => header,
-    transformSpecification: (swaggerObject, request, reply) => {
+    transformSpecification: (swaggerObject, _request, _reply) => {
         return swaggerObject;
     },
     transformSpecificationClone: true,
