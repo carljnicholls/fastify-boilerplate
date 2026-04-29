@@ -37,7 +37,7 @@ jobs:
               if: always()
               with:
                   name: coverage-results
-                  path: coverage/cobertura-coverage.xml
+                  path: "**/cobertura-coverage.xml"
                   retention-days: 1
 
             - name: Save Event File
