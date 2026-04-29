@@ -36,7 +36,7 @@ jobs:
                   const fs = require('fs');
                   const event = JSON.parse(fs.readFileSync('event-data/event.json', 'utf8'));
                   return event.pull_request ? event.pull_request.number : null;
-                  result-encoding: string
+                result-encoding: string
 
             - name: Download Coverage Results
               uses: actions/download-artifact@v4
