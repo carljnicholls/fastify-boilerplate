@@ -82,5 +82,5 @@ jobs:
               if: steps.pr_number.outputs.result != 'null'
               with:
                 recreate: true
-                  number: ${{ steps.pr_number.outputs.result }}
-                  path: code-coverage-results.md
+                number: ${{ steps.pr_number.outputs.result }}
+                path: code-coverage-results.md
