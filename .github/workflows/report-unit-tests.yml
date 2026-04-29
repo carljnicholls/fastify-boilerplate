@@ -1,7 +1,7 @@
 name: CI - Report Results
 on:
     workflow_run:
-        workflows: ["Run Tests"]
+        workflows: [Run Tests]
         types:
             - completed
 
