@@ -9,37 +9,43 @@ on:
 env:
     NODE_VERSION: "25.x"
 
-
 jobs:
     test:
         runs-on: ubuntu-latest
         steps:
             - name: Checkout code
               uses: actions/checkout@v5
+
             - name: Use Node.js
               uses: actions/setup-node@v4
               with:
                   node-version: ${{ env.NODE_VERSION }}
                   cache: "npm"
+
             - name: Install dependencies
               run: npm ci
+
             - name: Run Tests with Coverage and JUnit reporting
               run: npm run test-coverage
-            # Save the event file so the reporting workflow can identify the PR
+
             - name: Save Event File
               if: always()
-              run: |
-                  echo '${{ toJson(github.event) }}' > event.json
+              env:
+                  EVENT_CONTEXT: ${{ toJson(github.event) }}
+              run: echo "$EVENT_CONTEXT" > event.json
+
             - name: Upload Event File
               uses: actions/upload-artifact@v4
               if: always()
               with:
                   name: event-file
                   path: event.json
-            # Save the JUnit XML so the second workflow can find it
+                  retention-days: 1 
+
             - name: Upload Test Results
               uses: actions/upload-artifact@v4
               if: always()
               with:
-                name: junit-results
-                path: coverage/junit.xml
+                  name: junit-results
+                  path: coverage/junit.xml
+                  retention-days: 1
