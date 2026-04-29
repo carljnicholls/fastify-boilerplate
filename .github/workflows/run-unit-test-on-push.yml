@@ -32,6 +32,14 @@ jobs:
                   path: "**/junit.xml" # Adjust path to your results
                   retention-days: 1
 
+            - name: Upload Coverage Results
+              uses: actions/upload-artifact@v4
+              if: always()
+              with:
+                  name: coverage-results
+                  path: coverage/cobertura-coverage.xml
+                  retention-days: 1
+
             - name: Save Event File
               if: always()
               run: cp "${{ github.event_path }}" event.json
