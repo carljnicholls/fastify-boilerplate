@@ -13,6 +13,9 @@ const config: Config = {
         "^(\\.{1,2}/.*)\\.js$": "$1",
     },
 
+    "collectCoverageFrom": ["src/**/*.ts", "!**/node_modules/**"],
+    "coverageReporters": ["html", "text", "text-summary", "cobertura"],
+
     reporters: [
         "default", // Keep standard terminal output
         ["jest-junit", { outputDirectory: "./coverage" }],
