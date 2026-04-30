@@ -1,9 +1,9 @@
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
-import type { IUsersRepository } from "../repository/i-user-repository";
+import type { IUsersRepository } from "../repository/i-user-repository.js";
 import { deleteUser, getUser, postUser, updateUser } from "../services/user.js";
 import { getRepository } from "../utils/repo.js";
 import { type User, type UserWithPassword } from "../schemas/user.js";
-import type { IdParam } from "../schemas/query/id";
+import type { IdParam } from "../schemas/query/id.js";
 
 const getUserRepo = (request: FastifyInstance) => {
     return getRepository<IUsersRepository>(request, "usersRepository");

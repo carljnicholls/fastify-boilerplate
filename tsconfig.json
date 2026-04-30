@@ -5,7 +5,8 @@
         "rootDir": "./src",
         "outDir": "./dist",
 
-        "module": "esnext",
+        "module": "nodenext",
+        "moduleResolution": "nodenext",
         "target": "esnext",
         "lib": ["esnext"],
         "types": ["node", "fastify", "jest"],

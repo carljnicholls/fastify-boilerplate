@@ -19,8 +19,8 @@
     "scripts": {
         "build": "tsc -p tsconfig.json",
         "start": "node dist/index.js",
-        "test": "jest",
-        "test-coverage": "jest --coverage",
+        "test": "node --experimental-modules --localstorage-file=./src/__tests__/.jest-storage node_modules/jest/bin/jest.js",
+        "test-coverage": "node --experimental-vm-modules --localstorage-file=./src/__tests__/.jest-storage node_modules/jest/bin/jest.js --coverage",
         "integration": "cd ./src/__tests__/api-client/boilerplate && bru run"
     },
     "dependencies": {
@@ -43,6 +43,7 @@
         "fastify-cli": "^8.0.0",
         "jest": "^30.3.0",
         "jest-junit": "^17.0.0",
+        "ts-jest": "^29.4.9",
         "tsx": "^4.21.0",
         "typescript": "^6.0.3"
     }

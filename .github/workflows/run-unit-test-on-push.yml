@@ -31,6 +31,26 @@ jobs:
                   name: junit-results
                   path: "**/junit.xml" # Adjust path to your results
                   retention-days: 1
+    
+            - name: Debug File Location
+              run: |
+                REPORT_PATH=$(find . -name "cobertura-coverage.xml")
+                if [ -f "$REPORT_PATH" ]; then
+                echo "Found report at $REPORT_PATH"
+                echo "Size: $(du -h "$REPORT_PATH" | cut -f1)"
+                else
+                echo "Coverage report not found"
+                exit 1
+                fi
+
+            - name: Upload Coverage Results
+              uses: actions/upload-artifact@v4
+              if: always()
+              with:
+                  name: coverage-results
+                  path: coverage/cobertura-coverage.xml
+                  retention-days: 1
+                  if-no-files-found: error 
 
             - name: Save Event File
               if: always()

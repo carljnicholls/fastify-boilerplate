@@ -1,7 +1,7 @@
 import fastify from "fastify";
 import cors from "@fastify/cors";
 import env from "@fastify/env";
-import envSchema from "./schemas/env.json" with { type: "json" };
+import { EnvSchema, type Env } from "./schemas/env.js";
 import { corsSettings } from "./constants/cors.js";
 import RouteBuilder from "./routes/router-builder.js";
 import { UserRepository } from "./repository/users-repository.js";
@@ -9,7 +9,7 @@ import fastifyRedis from "@fastify/redis";
 import addFormats from "ajv-formats";
 import { fastifyPostgres } from "@fastify/postgres";
 import packageJson from "../package.json" with { type: "json" };
-import type { TypeBoxTypeProvider } from '@fastify/type-provider-typebox';
+import type { TypeBoxTypeProvider } from "@fastify/type-provider-typebox";
 
 const server = fastify({
     logger: {
@@ -19,20 +19,19 @@ const server = fastify({
     ajv: {
         plugins: [[addFormats, { mode: "fast" }] as any],
     },
-}).withTypeProvider<TypeBoxTypeProvider>();;
+}).withTypeProvider<TypeBoxTypeProvider>();
 
 await server.register(import("@fastify/swagger"), {
-        openapi: {
-            openapi: '3.1.1',
-            info: {
-                title: packageJson.name,
-                description: packageJson.description,
-                version: packageJson.version,
-                //...
-            },
-            
+    openapi: {
+        openapi: "3.1.1",
+        info: {
+            title: packageJson.name,
+            description: packageJson.description,
+            version: packageJson.version,
+            //...
         },
-    });
+    },
+});
 await server.register(import("@fastify/swagger-ui"), {
     routePrefix: "/documentation",
     uiConfig: {
@@ -48,17 +47,18 @@ await server.register(import("@fastify/swagger-ui"), {
 });
 // server.register(import("./plugins/open-api.js"));
 
-
 await server.register(env, {
-    schema: envSchema,
+    schema: EnvSchema,
     dotenv: true,
     confKey: "config",
 });
+await server.after();
 
 await server.register(cors, corsSettings);
 
+const envVariables = server.getEnvs() as Env;
 await server.register(fastifyPostgres, {
-    connectionString: "postgres://user:postgres@localhost:5432/boilerplate_db",
+    connectionString: `postgres://${envVariables.POSTGRES_USER}:${envVariables.POSTGRES_PASSWORD}@${envVariables.POSTGRES_HOST}:${envVariables.POSTGRES_PORT}/${envVariables.POSTGRES_DB}`,
 });
 await server.after();
 server.decorate("usersRepository", new UserRepository(server.pg.pool));
@@ -66,17 +66,24 @@ server.decorate("usersRepository", new UserRepository(server.pg.pool));
 RouteBuilder.build(server, { prefix: "/api/v1" });
 
 await server.register(fastifyRedis, {
-    url: "redis://localhost:6379",
+    url: `${envVariables.REDIS_HOST}:${envVariables.REDIS_PORT}`,
 });
 
 await server.ready();
 server.swagger();
 
-server.listen({ port: 8080 }, (err, address) => {
-    if (err) {
-        console.error(err);
-        server.redis.disconnect();
-        process.exit(1);
-    }
-    console.log(`Server listening at ${address}`);
-});
+server.listen(
+    {
+        port: envVariables.APP_PORT || 8080,
+        host: envVariables.APP_HOST || "0.0.0.0",
+    },
+    (err, address) => {
+        if (err) {
+            console.error(err);
+            server.pg.pool.end();
+            server.redis.disconnect();
+            process.exit(1);
+        }
+        console.log(`Server listening at ${address}`);
+    },
+);
