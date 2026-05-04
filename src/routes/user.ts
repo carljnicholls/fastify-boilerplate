@@ -53,10 +53,7 @@ export const userPlugin: FastifyPluginAsync = async (fastify, _options) => {
                 params: IdParamSchema,
                 body: UserSchema,
                 response: {
-                    200: {
-                        $schema: UserSchema.$schema,
-                    },
-                    // 200: UserSchema,
+                    200: UserSchema,
                     404: ErrorSchema,
                 },
                 description: "Update the user with the ID specified in the URL",
@@ -72,9 +69,7 @@ export const userPlugin: FastifyPluginAsync = async (fastify, _options) => {
             schema: {
                 params: IdParamSchema,
                 response: {
-                    200: {
-                        $schema: UserSchema.$schema,
-                    },
+                    200: UserSchema,
                     404: ErrorSchema,
                 },
                 description: "Delete the user with the ID specified in the URL",
