@@ -5,7 +5,7 @@ info:
 
 http:
   method: GET
-  url: http://localhost:8080/api/v1/health/status
+  url: http://127.0.0.1:8080/api/v1/health/status
   auth: inherit
 
 runtime:
@@ -15,9 +15,6 @@ runtime:
         test("status 200", function () {
           expect(res.getStatus()).to.equal(200);
         });
-  flow: "sequential" 
-    # // Or "sandwich"
-
 
 settings:
   encodeUrl: true
