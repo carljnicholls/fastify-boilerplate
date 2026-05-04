@@ -5,9 +5,13 @@ import {
     userPostHandler,
     userPutHandler,
 } from "../handlers/user.js";
-import { UserPasswordSchema as UserWithPasswordSchema, UserSchema } from "../schemas/user.js";
+import {
+    UserPasswordSchema as UserWithPasswordSchema,
+    UserSchema,
+} from "../schemas/user.js";
 import { IdParamSchema } from "../schemas/query/id.js";
 import { ErrorSchema } from "../schemas/error.js";
+import { mqttResponseHook } from "../hooks/mqtt-response-hook.js";
 
 export const userPlugin: FastifyPluginAsync = async (fastify, _options) => {
     fastify.get(
@@ -17,10 +21,10 @@ export const userPlugin: FastifyPluginAsync = async (fastify, _options) => {
                 params: IdParamSchema,
                 response: {
                     200: UserSchema,
-                    404: ErrorSchema
+                    404: ErrorSchema,
                 },
                 description: "Gets a user for a given id",
-                tags: ["user"]
+                tags: ["user"],
             },
         },
         userGetHandler,
@@ -32,11 +36,13 @@ export const userPlugin: FastifyPluginAsync = async (fastify, _options) => {
                 body: UserWithPasswordSchema,
                 response: {
                     200: UserSchema,
-                    500: ErrorSchema
+                    500: ErrorSchema,
                 },
-                description: "Create a user if it doesn't exist. Email and Username must be unique.",
-                tags: ["user"]
+                description:
+                    "Create a user if it doesn't exist. Email and Username must be unique.",
+                tags: ["user"],
             },
+            onResponse: mqttResponseHook
         },
         userPostHandler,
     );
@@ -48,14 +54,15 @@ export const userPlugin: FastifyPluginAsync = async (fastify, _options) => {
                 body: UserSchema,
                 response: {
                     200: {
-                        $schema: UserSchema.$schema
+                        $schema: UserSchema.$schema,
                     },
                     // 200: UserSchema,
-                    404: ErrorSchema
-                }, 
+                    404: ErrorSchema,
+                },
                 description: "Update the user with the ID specified in the URL",
                 tags: ["user"],
             },
+            onResponse: mqttResponseHook
         },
         userPutHandler,
     );
@@ -66,13 +73,14 @@ export const userPlugin: FastifyPluginAsync = async (fastify, _options) => {
                 params: IdParamSchema,
                 response: {
                     200: {
-                        $schema: UserSchema.$schema
+                        $schema: UserSchema.$schema,
                     },
-                    404: ErrorSchema
+                    404: ErrorSchema,
                 },
                 description: "Delete the user with the ID specified in the URL",
                 tags: ["user"],
             },
+            onResponse: mqttResponseHook
         },
         userDeleteHandler,
     );
