@@ -72,11 +72,7 @@ runtime:
         }
 
         test("should create unique user", function () {
-          console.log(req)
-          
           expect(res.getStatus()).to.equal(201);
-        //   expect(res.getBody()).to.have.
-          // extend with more assertions 
         });
 
 settings:
