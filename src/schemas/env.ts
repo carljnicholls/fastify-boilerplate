@@ -15,6 +15,10 @@ export const EnvSchema = Type.Object({
     APP_HOST: Type.String({ default: "0.0.0.0" }),
     APP_PORT: Type.Integer({ default: 8080 }),
 
+    MOSQUITTO_HOST: Type.String({ default: "localhost" }),
+    MOSQUITTO_PORT: Type.Integer({ default: 1883 }),
+    MOSQUITTO_WS_PORT: Type.Integer({ default: 9001 }),
+
     POSTGRES_USER: Type.String({
         description: "PostgreSQL user",
     }),
