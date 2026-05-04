@@ -19,7 +19,7 @@
     "scripts": {
         "build": "tsc -p tsconfig.json",
         "start": "node dist/index.js",
-        "test": "node --experimental-modules --localstorage-file=./src/__tests__/.jest-storage node_modules/jest/bin/jest.js",
+        "test": "node --experimental-vm-modules --localstorage-file=./src/__tests__/.jest-storage node_modules/jest/bin/jest.js",
         "test-coverage": "node --experimental-vm-modules --localstorage-file=./src/__tests__/.jest-storage node_modules/jest/bin/jest.js --coverage",
         "integration": "cd ./src/__tests__/api-client/boilerplate && bru run"
     },
@@ -32,11 +32,14 @@
         "@fastify/swagger-ui": "^5.2.6",
         "@fastify/type-provider-typebox": "^6.1.0",
         "@sinclair/typebox": "^0.34.49",
-        "fastify": "^5.8.5"
+        "fastify": "^5.8.5",
+        "mqtt": "^5.15.1",
+        "uuid": "^14.0.0"
     },
     "devDependencies": {
-        "@babel/preset-env": "^7.29.2",
-        "@babel/preset-typescript": "^7.28.5",
+        "@jest/globals": "^30.3.0",
+        "@types/jest": "^30.0.0",
+        "@types/mqtt": "^0.0.34",
         "@types/node": "^25.6.0",
         "@types/pg": "^8.20.0",
         "@usebruno/cli": "^3.3.0",

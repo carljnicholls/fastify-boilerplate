@@ -10,6 +10,9 @@ import addFormats from "ajv-formats";
 import { fastifyPostgres } from "@fastify/postgres";
 import packageJson from "../package.json" with { type: "json" };
 import type { TypeBoxTypeProvider } from "@fastify/type-provider-typebox";
+import { v7 as uuidv7 } from "uuid";
+import mqttPlugin from "./plugins/mqtt.js";
+import type { IClientOptions } from "mqtt";
 
 const server = fastify({
     logger: {
@@ -68,6 +71,12 @@ RouteBuilder.build(server, { prefix: "/api/v1" });
 await server.register(fastifyRedis, {
     url: `${envVariables.REDIS_HOST}:${envVariables.REDIS_PORT}`,
 });
+
+await server.register(mqttPlugin, {
+    hostname: envVariables.MOSQUITTO_HOST,
+    port: envVariables.MOSQUITTO_PORT,
+    clientId: uuidv7()
+} as IClientOptions);
 
 await server.ready();
 server.swagger();

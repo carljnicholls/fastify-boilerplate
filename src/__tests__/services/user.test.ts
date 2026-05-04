@@ -9,7 +9,7 @@ import {
 import { deleteUser, getUser, postUser, updateUser } from "../../services/user";
 import type { FastifyRedis } from "@fastify/redis";
 import type { IUsersRepository } from "../../repository/i-user-repository";
-import type { User } from "../../schemas/user";
+import type { User, UserWithPassword } from "../../schemas/user";
 
 const mockUser = {
     user_id: "123",
@@ -63,6 +63,7 @@ describe("user", () => {
             expect(mockRedis.get).toHaveBeenCalledWith("user:123");
             expect(mockRepo.get).toHaveBeenCalledWith("123");
             expect(mockRedis.set).toHaveBeenCalledWith(
+                // @ts-ignore
                 "user:123",
                 JSON.stringify(mockUser),
                 "EX",
@@ -77,6 +78,7 @@ describe("user", () => {
         });
 
         it("should create a user", async () => {
+            const user = {...mockUser} as UserWithPassword
             mockRedis = {
                 set: jest.fn<() => Promise<string>>().mockResolvedValue("OK"),
             } as unknown as FastifyRedis;
@@ -85,13 +87,14 @@ describe("user", () => {
                     .fn<() => Promise<User>>()
                     .mockResolvedValue(mockUser),
             } as unknown as IUsersRepository;
-            const result = await postUser(mockRedis, mockRepo, mockUser);
+            const result = await postUser(mockRedis, mockRepo, user);
 
-            expect(mockRepo.create).toHaveBeenCalledWith(mockUser);
-            expect(result).toMatchObject(mockUser);
+            expect(mockRepo.create).toHaveBeenCalledWith(user);
+            expect(result).toMatchObject(user);
             expect(mockRedis.set).toHaveBeenCalledWith(
+                // @ts-ignore
                 "user:123",
-                JSON.stringify(mockUser),
+                JSON.stringify(user),
                 "EX",
                 10,
             );
@@ -109,7 +112,7 @@ describe("user", () => {
             } as unknown as IUsersRepository;
 
             await expect(
-                postUser(mockRedis, mockRepo, mockUser),
+                postUser(mockRedis, mockRepo, mockUser as UserWithPassword),
             ).rejects.toThrow(
                 'duplicate key value violates unique constraint "users_username_key"',
             );
@@ -136,6 +139,7 @@ describe("user", () => {
             expect(mockRedis.del).toHaveBeenCalledWith("user:123");
             expect(mockRepo.update).toHaveBeenCalledWith(mockUser);
             expect(mockRedis.set).toHaveBeenCalledWith(
+                // @ts-ignore
                 "user:123",
                 JSON.stringify(mockUser),
                 "EX",
@@ -193,7 +197,6 @@ describe("user", () => {
                 delete: jest
                     .fn<() => Promise<User>>()
                     .mockRejectedValueOnce(new Error("DB Error")),
-                // delete: jest.fn().mockRejectedValue(new Error("DB Error")),
             } as unknown as IUsersRepository;
 
             await expect(
