@@ -1,4 +1,4 @@
-import type { User, UserWithPassword } from "../schemas/user";
+import type { User, UserWithPassword } from "../schemas/user.js";
 
 export interface IUsersRepository {
     get(id: string): Promise<User>;
