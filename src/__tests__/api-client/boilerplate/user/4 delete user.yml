@@ -5,7 +5,7 @@ info:
 
 http:
   method: DELETE
-  url: http://localhost:8080/api/v1/user/019dd3e7-d881-75a6-8511-82bc4735cd5e
+  url: http://127.0.0.1:8080/api/v1/user/019dd3e7-d881-75a6-8511-82bc4735cd5e
   body:
     type: json
     data: |+
@@ -25,7 +25,7 @@ runtime:
     - type: before-request
       code: |-
         const user = JSON.parse(bru.getVar("user"));
-        req.setUrl('http://localhost:8080/api/v1/user/' + user.user_id)
+        req.setUrl('http://127.0.0.1:8080/api/v1/user/' + user.user_id)
     - type: after-response
       code: // bru.deleteVar("user");
     - type: tests

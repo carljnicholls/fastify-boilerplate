@@ -4,6 +4,7 @@ import { deleteUser, getUser, postUser, updateUser } from "../services/user.js";
 import { getRepository } from "../utils/repo.js";
 import { type User, type UserWithPassword } from "../schemas/user.js";
 import type { IdParam } from "../schemas/query/id.js";
+import { setReplyMqtt } from "../utils/mqtt.js";
 
 const getUserRepo = (request: FastifyInstance) => {
     return getRepository<IUsersRepository>(request, "usersRepository");
@@ -20,7 +21,6 @@ export const userGetHandler = async (
         id,
     );
     reply.log.debug(user);
-
     await reply.status(200).send(user);
 };
 
@@ -29,14 +29,13 @@ export const userPostHandler = async (
     reply: FastifyReply,
 ) => {
     const user = request.body as UserWithPassword;
-
     const res = await postUser(
         request.server.redis,
         getUserRepo(request.server),
         user,
     );
-
-    reply.status(200).send(res);
+    setReplyMqtt(`api/v1/users/${res.user_id}/create`, reply, res);
+    reply.status(201).send(res);
 };
 
 export const userPutHandler = async (
@@ -52,7 +51,7 @@ export const userPutHandler = async (
         getUserRepo(request.server),
         user,
     );
-
+    setReplyMqtt(`api/v1/users/${res.user_id}/update`, reply, res);
     reply.status(200).send(res);
 };
 
@@ -66,5 +65,6 @@ export const userDeleteHandler = async (
         getUserRepo(request.server),
         id,
     );
+    setReplyMqtt(`api/v1/users/${res.user_id}/delete`, reply, res);
     reply.status(200).send(res);
 };

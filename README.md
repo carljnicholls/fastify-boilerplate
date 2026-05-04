@@ -76,3 +76,5 @@ Run individually, by directory or the entire collection.
 - [x] Use .env variables in the application 
     - [x] Set up 
     - [x] Use variables in server initialization 
+- [ ] Add mqtt for event based transports 
+    - [ ] Publish message on entity create, update, delete events

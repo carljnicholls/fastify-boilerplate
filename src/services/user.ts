@@ -51,6 +51,5 @@ export const deleteUser = async (
     userId: string,
 ): Promise<User> => {
     await redis.del(getRedisKey(userId));
-    const res = await repo.delete(userId);
-    return res;
+    return await repo.delete(userId);
 };

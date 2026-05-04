@@ -5,7 +5,7 @@ info:
 
 http:
   method: POST
-  url: http://localhost:8080/api/v1/user
+  url: http://127.0.0.1:8080/api/v1/user
   body:
     type: json
     data: |+
@@ -74,7 +74,7 @@ runtime:
         test("should create unique user", function () {
           console.log(req)
           
-          expect(res.getStatus()).to.equal(200);
+          expect(res.getStatus()).to.equal(201);
         //   expect(res.getBody()).to.have.
           // extend with more assertions 
         });

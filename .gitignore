@@ -2,4 +2,9 @@
 node_modules
 dist
 coverage
-**/.jest-storage
+**/.jest-storage*
+
+
+mosquitto/data/*
+mosquitto/log*
+mosquitto/config/pwfile*
