@@ -1,0 +1,27 @@
+info:
+  name: 6 get user by id not uuid not found
+  type: http
+  seq: 6
+
+http:
+  method: GET
+  url: http://127.0.0.1:8080/api/v1/user/019df333-5f63-7d80-8e65-8f04b3d432c5
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("should return expected error", function () {
+        //   console.log(res.getBody())
+          expect(res.getStatus()).to.equal(404);
+          expect(res.getBody().message).to.equal("User with id 019df333-5f63-7d80-8e65-8f04b3d432c5 was not found");
+            expect(res.getBody().code).to.equal("FST_USER_NOT_FOUND");
+
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

@@ -28,12 +28,8 @@ export const healthPlugin: FastifyPluginAsync = async (fastify, _options) => {
         {
             schema: {
                 response: {
-                    200: {
-                        $schema: MqttStatsSchema.$schema,
-                    },
-                    503: { 
-                        $schema: MqttStatsSchema.$schema 
-                    },
+                    200: MqttStatsSchema,
+                    503: MqttStatsSchema 
                 },
                 description: "Mqtt Client Health check",
                 tags: ["health"],

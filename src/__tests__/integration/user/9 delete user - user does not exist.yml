@@ -1,0 +1,38 @@
+info:
+  name: 9 delete user - user does not exist
+  type: http
+  seq: 9
+
+http:
+  method: DELETE
+  url: http://127.0.0.1:8080/api/v1/user/019df333-5f63-7d80-8e65-8f04b3d432c5
+  body:
+    type: json
+    data: |
+      
+      {}
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("should return error. user not found", function () {
+
+          const expected = {
+          "message": "User with id 019df333-5f63-7d80-8e65-8f04b3d432c5 was not found",
+          "error": "Not Found",
+          "code": "FST_USER_NOT_FOUND",
+          "statusCode": "404"
+        }
+          
+          expect(res.getStatus()).to.equal(404)
+          expect(res.getBody()).to.deep.equal(expected)
+                 
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

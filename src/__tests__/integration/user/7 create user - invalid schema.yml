@@ -1,0 +1,39 @@
+info:
+  name: 7 create user - invalid schema
+  type: http
+  seq: 7
+
+http:
+  method: POST
+  url: http://127.0.0.1:8080/api/v1/user
+  body:
+    type: json
+    data: |-
+      {  
+        "username": "terry", 
+        "first_name": "terry", 
+        "last_name": "two-toes"
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("should return error. missing email", function () {
+          const expected = {
+          "statusCode": 400,
+          "code": "FST_ERR_VALIDATION",
+          "error": "Bad Request",
+          "message": "body must have required property 'email'"
+          };
+          
+          expect(res.getStatus()).to.equal(400);
+          expect(res.getBody()).to.deep.equal(expected)
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

@@ -54,10 +54,13 @@ You require [Bruno-CLI](https://docs.usebruno.com/bru-cli/overview) standalone o
 npm run integration
 ```
 or
+```bash 
+npm run integration-coverage
+```
+or
 ```bash
-cd ./src/__tests__/api-client/boilerplate
-bru run --reporter-junit ../../../coverage/bruno/results.xml
-
+cd ./src/__tests__/integration
+bru run --reporter-junit ../../../coverage/bruno-results.xml
 ```
 
 <strong>VS Code</strong> 

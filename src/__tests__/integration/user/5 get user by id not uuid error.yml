@@ -1,0 +1,27 @@
+info:
+  name: 5 get user by id not uuid error
+  type: http
+  seq: 5
+
+http:
+  method: GET
+  url: http://127.0.0.1:8080/api/v1/user/user_id
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("should return expected error", function () {
+        //   console.log(res.getBody())
+          expect(res.getStatus()).to.equal(400);
+          expect(res.getBody().message).to.equal("params/id must match format \"uuid\"")
+            expect(res.getBody().code).to.equal("FST_ERR_VALIDATION");
+
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

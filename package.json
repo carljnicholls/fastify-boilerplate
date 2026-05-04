@@ -21,7 +21,8 @@
         "start": "node dist/index.js",
         "test": "node --experimental-vm-modules --localstorage-file=./src/__tests__/.jest-storage node_modules/jest/bin/jest.js",
         "test-coverage": "node --experimental-vm-modules --localstorage-file=./src/__tests__/.jest-storage node_modules/jest/bin/jest.js --coverage",
-        "integration": "cd ./src/__tests__/api-client/boilerplate && bru run"
+        "integration": "cd ./src/__tests__/integration && bru run",
+        "integration-coverage": "cd ./src/__tests__/integration && bru run --reporter-junit ../../../coverage/bruno-results.xml"
     },
     "dependencies": {
         "@fastify/cors": "^11.2.0",
