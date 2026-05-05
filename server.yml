@@ -4,23 +4,169 @@ info:
   description: ""
   version: 0.0.1
 components:
-  schemas: {}
+  schemas:
+    def-0:
+      type: object
+      required:
+        - message
+        - error
+      properties:
+        message:
+          type: string
+        error:
+          type: string
+        code:
+          type: string
+        statusCode:
+          type: string
+      title: error
+    def-1:
+      title: MqttStats
+      description: Statistics about the MQTT client connection status
+      type: object
+      required:
+        - connected
+        - reconnecting
+        - client_id
+      properties:
+        connected:
+          type: boolean
+        reconnecting:
+          type: boolean
+        client_id:
+          type: string
+    def-2:
+      type: object
+      required:
+        - username
+        - email
+        - password
+      properties:
+        user_id:
+          format: uuid
+          type: string
+        username:
+          minLength: 1
+          maxLength: 255
+          type: string
+        email:
+          format: email
+          maxLength: 255
+          type: string
+        first_name:
+          anyOf:
+            - maxLength: 255
+              type: string
+            - type: "null"
+        last_name:
+          anyOf:
+            - maxLength: 255
+              type: string
+            - type: "null"
+        password:
+          minLength: 8
+          type: string
+      title: userWithPassword
+    def-3:
+      type: object
+      required:
+        - username
+        - email
+      properties:
+        user_id:
+          format: uuid
+          type: string
+        username:
+          minLength: 1
+          maxLength: 255
+          type: string
+        email:
+          format: email
+          maxLength: 255
+          type: string
+        first_name:
+          anyOf:
+            - maxLength: 255
+              type: string
+            - type: "null"
+        last_name:
+          anyOf:
+            - maxLength: 255
+              type: string
+            - type: "null"
+      title: user
+    def-4:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          format: uuid
+          type: string
+      title: idParam
 paths:
-  /api/v1/health/status:
+  /api/v1/health/mqtt/:
+    get:
+      tags:
+        - health
+      description: Mqtt Client Health check
+      responses:
+        "200":
+          description: Statistics about the MQTT client connection status
+          content:
+            application/json:
+              schema:
+                title: MqttStats
+                description: Statistics about the MQTT client connection status
+                type: object
+                required:
+                  - connected
+                  - reconnecting
+                  - client_id
+                properties:
+                  connected:
+                    type: boolean
+                  reconnecting:
+                    type: boolean
+                  client_id:
+                    type: string
+        "503":
+          description: Statistics about the MQTT client connection status
+          content:
+            application/json:
+              schema:
+                title: MqttStats
+                description: Statistics about the MQTT client connection status
+                type: object
+                required:
+                  - connected
+                  - reconnecting
+                  - client_id
+                properties:
+                  connected:
+                    type: boolean
+                  reconnecting:
+                    type: boolean
+                  client_id:
+                    type: string
+  /api/v1/health/status/:
     get:
       tags:
         - health
       description: Health check
       responses:
         "200":
-          description: Heartbeat response
+          description: Default Response
           content:
             application/json:
               schema:
-                type: string
-                description: Heartbeat response
-                example: ok
-  /api/v1/health/teapot:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Health status
+                    example: ok
+  /api/v1/health/teapot/:
     get:
       tags:
         - health
@@ -34,7 +180,7 @@ paths:
                 type: string
                 description: https://www.rfc-editor.org/rfc/rfc9110#section-15.5.19
                 example: I'm a teapot
-  /api/v1/user/{id}:
+  /api/v1/users/{id}:
     get:
       tags:
         - user
@@ -143,7 +289,33 @@ paths:
           description: Default Response
           content:
             application/json:
-              schema: {}
+              schema:
+                type: object
+                required:
+                  - username
+                  - email
+                properties:
+                  user_id:
+                    format: uuid
+                    type: string
+                  username:
+                    minLength: 1
+                    maxLength: 255
+                    type: string
+                  email:
+                    format: email
+                    maxLength: 255
+                    type: string
+                  first_name:
+                    anyOf:
+                      - maxLength: 255
+                        type: string
+                      - type: "null"
+                  last_name:
+                    anyOf:
+                      - maxLength: 255
+                        type: string
+                      - type: "null"
         "404":
           description: Default Response
           content:
@@ -178,7 +350,33 @@ paths:
           description: Default Response
           content:
             application/json:
-              schema: {}
+              schema:
+                type: object
+                required:
+                  - username
+                  - email
+                properties:
+                  user_id:
+                    format: uuid
+                    type: string
+                  username:
+                    minLength: 1
+                    maxLength: 255
+                    type: string
+                  email:
+                    format: email
+                    maxLength: 255
+                    type: string
+                  first_name:
+                    anyOf:
+                      - maxLength: 255
+                        type: string
+                      - type: "null"
+                  last_name:
+                    anyOf:
+                      - maxLength: 255
+                        type: string
+                      - type: "null"
         "404":
           description: Default Response
           content:
@@ -197,7 +395,7 @@ paths:
                     type: string
                   statusCode:
                     type: string
-  /api/v1/user:
+  /api/v1/users/:
     post:
       tags:
         - user
@@ -208,41 +406,35 @@ paths:
           application/json:
             schema:
               type: object
-              allOf:
-                - type: object
-                  required:
-                    - username
-                    - email
-                  properties:
-                    user_id:
-                      format: uuid
+              required:
+                - username
+                - email
+                - password
+              properties:
+                user_id:
+                  format: uuid
+                  type: string
+                username:
+                  minLength: 1
+                  maxLength: 255
+                  type: string
+                email:
+                  format: email
+                  maxLength: 255
+                  type: string
+                first_name:
+                  anyOf:
+                    - maxLength: 255
                       type: string
-                    username:
-                      minLength: 1
-                      maxLength: 255
+                    - type: "null"
+                last_name:
+                  anyOf:
+                    - maxLength: 255
                       type: string
-                    email:
-                      format: email
-                      maxLength: 255
-                      type: string
-                    first_name:
-                      anyOf:
-                        - maxLength: 255
-                          type: string
-                        - type: "null"
-                    last_name:
-                      anyOf:
-                        - maxLength: 255
-                          type: string
-                        - type: "null"
-                  title: user_id
-                - type: object
-                  required:
-                    - password
-                  properties:
-                    password:
-                      minLength: 8
-                      type: string
+                    - type: "null"
+                password:
+                  minLength: 8
+                  type: string
       responses:
         "200":
           description: Default Response
@@ -275,7 +467,7 @@ paths:
                       - maxLength: 255
                         type: string
                       - type: "null"
-        "500":
+        "404":
           description: Default Response
           content:
             application/json:
