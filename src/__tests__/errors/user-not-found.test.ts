@@ -1,4 +1,5 @@
-import { describe, it, expect, jest, beforeEach } from "@jest/globals";
+// import { describe, it, expect, jest, beforeEach } from "@jest/globals";
+import { afterAll, expect, test, describe, it } from 'vitest'
 
 import { UserNotFoundError } from '../../errors/user-not-found.js'; 
 

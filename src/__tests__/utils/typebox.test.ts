@@ -1,6 +1,6 @@
+import { afterAll, expect, test, describe, it, beforeEach } from 'vitest'
 import { isTypeBoxObject } from "../../utils/type-box";
 import { Kind } from "@sinclair/typebox";
-import { describe, it, expect } from "@jest/globals";
 
 describe("isTypeBoxObject", () => {
     describe("returns false for non-object types", () => {

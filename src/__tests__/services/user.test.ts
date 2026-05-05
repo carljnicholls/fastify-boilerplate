@@ -1,11 +1,5 @@
-import {
-    describe,
-    it,
-    expect,
-    jest,
-    beforeAll,
-    beforeEach,
-} from "@jest/globals";
+import { afterAll, expect, test, describe, it, beforeEach, beforeAll, vi } from 'vitest'
+
 import { deleteUser, getUser, postUser, updateUser } from "../../services/user";
 import type { FastifyRedis } from "@fastify/redis";
 import type { IUsersRepository } from "../../repository/i-user-repository";
@@ -21,25 +15,21 @@ let mockRepo: IUsersRepository;
 
 describe("user", () => {
     beforeAll(() => {
-        // This will hide all logs, warnings, and errors during the test run
-        jest.spyOn(console, "log").mockImplementation(() => {});
-        jest.spyOn(console, "warn").mockImplementation(() => {});
-        jest.spyOn(console, "error").mockImplementation(() => {});
     });
 
     describe("getUser", () => {
         beforeEach(() => {
-            jest.clearAllMocks();
+            vi.clearAllMocks();
         });
 
         it("should get a user from redis if they are cached", async () => {
             mockRedis = {
-                get: jest
+                get: vi
                     .fn<() => Promise<string>>()
                     .mockResolvedValue(JSON.stringify(mockUser)),
             } as unknown as FastifyRedis;
             mockRepo = {
-                get: jest.fn<() => Promise<User>>().mockResolvedValue(mockUser),
+                get: vi.fn<() => Promise<User>>().mockResolvedValue(mockUser),
             } as unknown as IUsersRepository;
             expect(await getUser(mockRedis, mockRepo, "123")).toMatchObject(
                 mockUser,
@@ -50,13 +40,13 @@ describe("user", () => {
 
         it("should get a user from db if not cached in redis", async () => {
             mockRedis = {
-                get: jest
+                get: vi
                     .fn<() => Promise<string | null>>()
                     .mockResolvedValue(null),
-                set: jest.fn<() => Promise<string>>().mockResolvedValue("OK"),
+                set: vi.fn<() => Promise<string>>().mockResolvedValue("OK"),
             } as unknown as FastifyRedis;
             mockRepo = {
-                get: jest.fn<() => Promise<User>>().mockResolvedValue(mockUser),
+                get: vi.fn<() => Promise<User>>().mockResolvedValue(mockUser),
             } as unknown as IUsersRepository;
             expect(await getUser(mockRedis, mockRepo, "123")).toMatchObject(
                 mockUser,
@@ -75,16 +65,16 @@ describe("user", () => {
 
     describe("postUser", () => {
         beforeEach(() => {
-            jest.clearAllMocks();
+            vi.clearAllMocks();
         });
 
         it("should create a user", async () => {
             const user = {...mockUser} as UserWithPassword
             mockRedis = {
-                set: jest.fn<() => Promise<string>>().mockResolvedValue("OK"),
+                set: vi.fn<() => Promise<string>>().mockResolvedValue("OK"),
             } as unknown as FastifyRedis;
             mockRepo = {
-                create: jest
+                create: vi
                     .fn<() => Promise<User>>()
                     .mockResolvedValue(mockUser),
             } as unknown as IUsersRepository;
@@ -103,7 +93,7 @@ describe("user", () => {
 
         it("should throw if the repository errors", async () => {
             const mockRepo = {
-                create: jest
+                create: vi
                     .fn<() => Promise<User>>()
                     .mockRejectedValueOnce(
                         new Error(
@@ -122,16 +112,16 @@ describe("user", () => {
 
     describe("updateUser", () => {
         beforeEach(() => {
-            jest.clearAllMocks();
+            vi.clearAllMocks();
         });
 
         it("should update a user", async () => {
             const mockRedis = {
-                del: jest.fn<() => Promise<number>>().mockResolvedValue(1),
-                set: jest.fn<() => Promise<string>>().mockResolvedValue("OK"),
+                del: vi.fn<() => Promise<number>>().mockResolvedValue(1),
+                set: vi.fn<() => Promise<string>>().mockResolvedValue("OK"),
             } as unknown as FastifyRedis;
             const mockRepo = {
-                update: jest
+                update: vi
                     .fn<() => Promise<User>>()
                     .mockResolvedValue(mockUser),
             } as unknown as IUsersRepository;
@@ -151,11 +141,11 @@ describe("user", () => {
 
         it("should throw if the repository errors", async () => {
             mockRedis = {
-                del: jest.fn<() => Promise<number>>().mockResolvedValue(1),
-                set: jest.fn<() => Promise<string>>().mockResolvedValue("OK"),
+                del: vi.fn<() => Promise<number>>().mockResolvedValue(1),
+                set: vi.fn<() => Promise<string>>().mockResolvedValue("OK"),
             } as unknown as FastifyRedis;
             mockRepo = {
-                update: jest
+                update: vi
                     .fn<() => Promise<User>>()
                     .mockRejectedValueOnce(new Error("DB Error")),
             } as unknown as IUsersRepository;
@@ -168,16 +158,16 @@ describe("user", () => {
 
     describe("deleteUser", () => {
         beforeEach(() => {
-            jest.clearAllMocks();
+            vi.clearAllMocks();
         });
 
         it("should delete a user", async () => {
             mockRedis = {
-                del: jest.fn<() => Promise<number>>().mockResolvedValue(1),
+                del: vi.fn<() => Promise<number>>().mockResolvedValue(1),
             } as unknown as FastifyRedis;
 
             mockRepo = {
-                delete: jest
+                delete: vi
                     .fn<() => Promise<User>>()
                     .mockResolvedValue(mockUser),
             } as unknown as IUsersRepository;
@@ -191,11 +181,11 @@ describe("user", () => {
 
         it("should throw if the repository errors", async () => {
             mockRedis = {
-                del: jest.fn<() => Promise<number>>().mockResolvedValue(1),
+                del: vi.fn<() => Promise<number>>().mockResolvedValue(1),
             } as unknown as FastifyRedis;
 
             mockRepo = {
-                delete: jest
+                delete: vi
                     .fn<() => Promise<User>>()
                     .mockRejectedValueOnce(new Error("DB Error")),
             } as unknown as IUsersRepository;

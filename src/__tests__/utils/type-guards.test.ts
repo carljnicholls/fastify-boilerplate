@@ -1,8 +1,4 @@
-import {
-    describe,
-    test,
-    expect,
-} from "@jest/globals";
+import { afterAll, expect, test, describe, it, beforeEach } from 'vitest'
 import { Buffer } from "buffer";
 import { toStringOrBuffer } from "../../utils/type-guards.js";
 
