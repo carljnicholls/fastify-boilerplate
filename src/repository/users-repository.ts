@@ -1,7 +1,8 @@
 import type { Pool } from "pg";
 import type { IUsersRepository } from "./i-user-repository.js";
-import type { User, UserWithPassword } from "../schemas/user.js";
+import type { User } from "../schemas/public/user.js";
 import { UserNotFoundError } from "../errors/user-not-found.js";
+import type { UserWithPassword } from "../schemas/public/user-with-password.js";
 
 export class UserRepository implements IUsersRepository {
     protected pg: Pool;
@@ -34,11 +35,11 @@ export class UserRepository implements IUsersRepository {
             RETURNING user_id, username, email, first_name, last_name
             `,
             [
-                user["username"],
-                user["email"],
-                user["password"],
-                user["first_name"],
-                user["last_name"],
+                user.username,
+                user.email,
+                user.password,
+                user.first_name,
+                user.last_name,
             ],
         );
 

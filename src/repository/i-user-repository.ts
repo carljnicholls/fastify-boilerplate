@@ -1,4 +1,5 @@
-import type { User, UserWithPassword } from "../schemas/user.js";
+import type { UserWithPassword } from "../schemas/public/user-with-password.js";
+import type { User } from "../schemas/public/user.js";
 
 export interface IUsersRepository {
     get(id: string): Promise<User>;

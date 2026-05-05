@@ -1,5 +1,5 @@
 import type { FastifyReply } from "fastify";
-import { toStringOrBuffer } from "./type_guards.js";
+import { toStringOrBuffer } from "./type-guards.js";
 
 export const setReplyMqtt = (
     topic: string,

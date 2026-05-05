@@ -71,6 +71,14 @@ await server.register(fastifyPostgres, {
 await server.after();
 server.decorate("usersRepository", new UserRepository(server.pg.pool));
 
+/** autoLoad schemas */
+await server.register(autoLoad, {
+    dir: join(__dirname, "plugins"),
+    forceESM: true,
+    // logLevel: "debug",
+    matchFilter: /schema-loader\.(ts|js)$/,
+});
+
 /** autoLoad routes */
 await server.register(autoLoad, {
     dir: join(__dirname, "routes"),

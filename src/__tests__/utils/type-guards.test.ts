@@ -4,7 +4,7 @@ import {
     expect,
 } from "@jest/globals";
 import { Buffer } from "buffer";
-import { toStringOrBuffer } from "../../utils/type_guards.js";
+import { toStringOrBuffer } from "../../utils/type-guards.js";
 
 describe("toStringOrBuffer", () => {
     describe("Direct Pass-through", () => {
