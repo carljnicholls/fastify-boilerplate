@@ -34,7 +34,7 @@ When the API is running OpenAPI documentation is available at http://localhost:8
 ## Testing
 
 ### Unit Testing
-Provided by Jest 
+Provided by ViTest 
 ```bash
 npm run test
 ```
@@ -79,5 +79,5 @@ Run individually, by directory or the entire collection.
 - [x] Use .env variables in the application 
     - [x] Set up 
     - [x] Use variables in server initialization 
-- [ ] Add mqtt for event based transports 
-    - [ ] Publish message on entity create, update, delete events
+- [x] Add mqtt for event based transports 
+    - [x] Publish message on entity create, update, delete events

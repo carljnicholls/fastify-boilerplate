@@ -1,15 +1,15 @@
-import { describe, it, expect, jest, beforeEach } from "@jest/globals";
+import { afterAll, expect, test, describe, it, beforeEach, vi, Mock } from 'vitest'
 import { mqttResponseHook } from "../../hooks/mqtt-response-hook.js";
 
 describe('mqttResponseHook', () => {
     let mockRequest: any;
     let mockReply: any;
-    let publishAsyncSpy: jest.Mock;
-    let logErrorSpy: jest.Mock;
+    let publishAsyncSpy: Mock;
+    let logErrorSpy: Mock;
 
     beforeEach(() => {
-        publishAsyncSpy = jest.fn().mockResolvedValue(undefined as never);
-        logErrorSpy = jest.fn();
+        publishAsyncSpy = vi.fn().mockResolvedValue(undefined as never);
+        logErrorSpy = vi.fn();
 
         mockRequest = {
             server: {

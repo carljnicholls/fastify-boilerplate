@@ -1,7 +1,5 @@
 {
-    // Visit https://aka.ms/tsconfig to read more about this file
     "compilerOptions": {
-        // File Layout
         "rootDir": "./src",
         "outDir": "./dist",
 
@@ -9,18 +7,15 @@
         "moduleResolution": "nodenext",
         "target": "esnext",
         "lib": ["esnext"],
-        "types": ["node", "fastify", "jest"],
+        "types": ["node", "fastify", "vitest", "vitest/globals"],
 
-        // Other Outputs
         "sourceMap": true,
         "declaration": true,
         "declarationMap": true,
 
-        // Stricter Typechecking Options
         "noUncheckedIndexedAccess": true,
         "exactOptionalPropertyTypes": true,
 
-        // Style Options
         "noImplicitReturns": true,
         "noImplicitOverride": true,
         "noUnusedLocals": true,
@@ -28,7 +23,6 @@
         "noFallthroughCasesInSwitch": true,
         "noPropertyAccessFromIndexSignature": true,
 
-        // Recommended Options
         "strict": true,
         "jsx": "react-jsx",
         "verbatimModuleSyntax": true,
@@ -42,8 +36,9 @@
         "dist",
         "**/__tests__/*",
         "**/*.test.ts",
-        "**/*.spec.ts", 
-        "**/jest.config.ts",
-        "**/jest.setup.ts"
+        "**/*.spec.ts"
+    ],
+    "include": [
+        "src/**/*"
     ]
 }
