@@ -1,7 +1,6 @@
 import { Type, type Static } from "@sinclair/typebox";
 
-export const UserSchema = Type.Object(
-    {
+export const UserPasswordSchema = Type.Object({
         user_id: Type.Optional(Type.String({ format: "uuid" })),
         username: Type.String({
             minLength: 1,
@@ -17,10 +16,8 @@ export const UserSchema = Type.Object(
         last_name: Type.Optional(
             Type.Union([Type.String({ maxLength: 255 }), Type.Null()]),
         ),
+        password: Type.String({ minLength: 8 }),
     },
-    { $id: "user_id",   },
+    { $id: "userWithPassword" },
 );
-export type User = Static<typeof UserSchema>;
-
-export const UserPasswordSchema = Type.Intersect([UserSchema, Type.Object({ password: Type.String({ minLength: 8 }) })])
 export type UserWithPassword = Static<typeof UserPasswordSchema>;

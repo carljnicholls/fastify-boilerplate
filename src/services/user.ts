@@ -1,6 +1,7 @@
 import type { FastifyRedis } from "@fastify/redis";
 import type { IUsersRepository } from "../repository/i-user-repository.js";
-import type { User, UserWithPassword } from "../schemas/user.js";
+import type { User } from "../schemas/public/user.js";
+import type { UserWithPassword } from "../schemas/public/user-with-password.js";
 
 const getRedisKey = (userId: string) => {
     return `user:${userId}`;

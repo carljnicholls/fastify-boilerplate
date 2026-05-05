@@ -9,7 +9,8 @@ import {
 import { deleteUser, getUser, postUser, updateUser } from "../../services/user";
 import type { FastifyRedis } from "@fastify/redis";
 import type { IUsersRepository } from "../../repository/i-user-repository";
-import type { User, UserWithPassword } from "../../schemas/user";
+import type { User } from "../../schemas/public/user";
+import type { UserWithPassword } from "../../schemas/public/user-with-password";
 
 const mockUser = {
     user_id: "123",

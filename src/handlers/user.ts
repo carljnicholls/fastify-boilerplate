@@ -2,9 +2,10 @@ import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import type { IUsersRepository } from "../repository/i-user-repository.js";
 import { deleteUser, getUser, postUser, updateUser } from "../services/user.js";
 import { getRepository } from "../utils/repo.js";
-import { type User, type UserWithPassword } from "../schemas/user.js";
-import type { IdParam } from "../schemas/query/id.js";
+import { type User } from "../schemas/public/user.js";
+import type { IdParam } from "../schemas/public/query/id-param.js";
 import { setReplyMqtt } from "../utils/mqtt.js";
+import type { UserWithPassword } from "../schemas/public/user-with-password.js";
 
 const getUserRepo = (request: FastifyInstance) => {
     return getRepository<IUsersRepository>(request, "usersRepository");

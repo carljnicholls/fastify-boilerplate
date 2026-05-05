@@ -3,7 +3,6 @@ import cors from "@fastify/cors";
 import env from "@fastify/env";
 import { EnvSchema, type Env } from "./schemas/env.js";
 import { corsSettings } from "./constants/cors.js";
-import RouteBuilder from "./routes/router-builder.js";
 import { UserRepository } from "./repository/users-repository.js";
 import fastifyRedis from "@fastify/redis";
 import addFormats from "ajv-formats";
@@ -13,6 +12,12 @@ import type { TypeBoxTypeProvider } from "@fastify/type-provider-typebox";
 import { v7 as uuidv7 } from "uuid";
 import mqttPlugin from "./plugins/mqtt.js";
 import type { IClientOptions } from "mqtt";
+import { fileURLToPath } from "node:url";
+import { dirname, join } from "node:path";
+import autoLoad from "@fastify/autoload";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const server = fastify({
     logger: {
@@ -66,7 +71,23 @@ await server.register(fastifyPostgres, {
 await server.after();
 server.decorate("usersRepository", new UserRepository(server.pg.pool));
 
-RouteBuilder.build(server, { prefix: "/api/v1" });
+/** autoLoad schemas */
+await server.register(autoLoad, {
+    dir: join(__dirname, "plugins"),
+    forceESM: true,
+    // logLevel: "debug",
+    matchFilter: /schema-loader\.(ts|js)$/,
+});
+
+/** autoLoad routes */
+await server.register(autoLoad, {
+    dir: join(__dirname, "routes"),
+    forceESM: true,
+    // logLevel: "debug",
+    options: {
+        prefix: "/api/v1",
+    },
+});
 
 await server.register(fastifyRedis, {
     url: `${envVariables.REDIS_HOST}:${envVariables.REDIS_PORT}`,
@@ -75,7 +96,7 @@ await server.register(fastifyRedis, {
 await server.register(mqttPlugin, {
     hostname: envVariables.MOSQUITTO_HOST,
     port: envVariables.MOSQUITTO_PORT,
-    clientId: uuidv7()
+    clientId: uuidv7(),
 } as IClientOptions);
 
 await server.ready();
@@ -91,6 +112,7 @@ server.listen(
             console.error(err);
             server.pg.pool.end();
             server.redis.disconnect();
+            server.mqtt.end();
             process.exit(1);
         }
         console.log(`Server listening at ${address}`);
