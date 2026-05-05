@@ -1,5 +1,8 @@
 .env
 node_modules
+# TypeScript incremental build cache
+*.tsbuildinfo
+
 dist
 coverage
 **/.jest-storage*
