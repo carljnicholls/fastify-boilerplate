@@ -7,7 +7,7 @@
         "moduleResolution": "nodenext",
         "target": "esnext",
         "lib": ["esnext"],
-        "types": ["node", "fastify", "vitest"],
+        "types": ["node", "fastify", "vitest", "vitest/globals"],
 
         "sourceMap": true,
         "declaration": true,

@@ -2,6 +2,8 @@ import { defineConfig } from "vitest/config";
 
 export default defineConfig({
     test: {
+        globals: true, 
+        environment: "node",
         coverage: {
             include: ["src/**"],
             exclude: [
@@ -9,24 +11,23 @@ export default defineConfig({
                 "src/index.ts",
                 "**__tests__**",
                 "**/*.d.ts",
+                "**/schemas/**",
+                "**/__mocks__/**",
+                // ignore interfaces
+                "**/i-***.ts",
+                "**/cors.ts",
             ],
             provider: "v8",
             reportsDirectory: "coverage",
-            reporter: [
-                "text",
-                "cobertura",
-            ],
+            reporter: ["text", "cobertura"],
             thresholds: {
-                lines: 35,
-                branches: 50,
-                functions: 28,
-                statements: 35,
+                statements: 45,
+                branches: 60,
+                functions: 35,
+                lines: 45,
             },
         },
-        reporters: [
-            "default",
-            "junit",
-        ],
+        reporters: ["default", "junit"],
 
         outputFile: {
             junit: "coverage/junit.xml",

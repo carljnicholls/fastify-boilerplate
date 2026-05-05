@@ -1,4 +1,4 @@
-import { afterAll, expect, test, describe, it, beforeEach } from 'vitest'
+import { afterAll, expect, test, describe, it, beforeEach } from "vitest";
 import { isTypeBoxObject } from "../../utils/type-box";
 import { Kind } from "@sinclair/typebox";
 
