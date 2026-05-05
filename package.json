@@ -25,6 +25,7 @@
         "integration-coverage": "cd ./src/__tests__/integration && bru run --reporter-junit ../../../coverage/bruno-results.xml"
     },
     "dependencies": {
+        "@fastify/autoload": "^6.3.1",
         "@fastify/cors": "^11.2.0",
         "@fastify/env": "^6.0.0",
         "@fastify/postgres": "^6.0.2",

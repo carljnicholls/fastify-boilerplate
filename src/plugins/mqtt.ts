@@ -13,6 +13,8 @@ const mqttPluginAsync: FastifyPluginAsync<IClientOptions> = async (
     options: IClientOptions,
 ) => {
     try {
+        if(fastify.mqtt) throw new Error('mqtt plugin already initialized'); 
+
         const mqttClient = await connectAsync(options);
         
         fastify.addHook("onClose", async () => {
@@ -20,6 +22,7 @@ const mqttPluginAsync: FastifyPluginAsync<IClientOptions> = async (
         });
 
         fastify.decorate("mqtt", mqttClient);
+        
     } catch (error) {
         console.error('mqtt plugin', error);
         throw error;
