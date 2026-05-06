@@ -4,7 +4,6 @@ import { EnvSchema, type Env } from "./schemas/env.js";
 
 declare module "fastify" {
     interface FastifyInstance {
-        usersRepository: IUsersRepository;
         redis: FastifyRedis;
         config: EnvSchema;
     }
